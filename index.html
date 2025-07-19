@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚽ JADWAL BOLA PAPANATASSLOT ⚽</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #000000, #5c4d00, #000000);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: gold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: rgba(0,0,0,0.5);
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid gold;
+    }
+    th {
+      background-color: #222;
+      color: gold;
+    }
+    a {
+      color: #00f0ff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .loading {
+      color: yellow;
+      font-style: italic;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚽ JADWAL BOLA PAPANATASSLOT ⚽</h1>
+  <div id="loading" class="loading">Mengambil data jadwal bola...</div>
+  <table id="jadwalTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Tanggal</th>
+        <th>Pertandingan</th>
+        <th>Kompetisi</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function getJadwalBola() {
+      const response = await fetch("https://www.scorebat.com/video-api/v3/");
+      const data = await response.json();
+      return data.response.map(match => ({
+        tanggal: new Date(match.date).toLocaleString("id-ID"),
+        title: match.title,
+        kompetisi: match.competition,
+        link: match.matchviewUrl
+      }));
+    }
+
+    async function tampilkanJadwal() {
+      const loading = document.getElementById("loading");
+      const table = document.getElementById("jadwalTable");
+      const tbody = table.querySelector("tbody");
+
+      try {
+        const jadwal = await getJadwalBola();
+        tbody.innerHTML = "";
+        jadwal.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.tanggal}</td>
+            <td>${item.title}</td>
+            <td>${item.kompetisi}</td>
+            <td><a href="${item.link}" target="_blank">Lihat</a></td>
+          `;
+          tbody.appendChild(row);
+        });
+        loading.style.display = "none";
+        table.style.display = "table";
+      } catch (err) {
+        loading.innerHTML = "Gagal mengambil data jadwal.";
+        console.error(err);
+      }
+    }
+
+    tampilkanJadwal();
+  </script>
+</body>
+</html>
